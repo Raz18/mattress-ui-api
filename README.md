@@ -1,4 +1,4 @@
-# Awara Sleep QA Automation Test Suite
+# Mattress site Sleep QA Automation Test Suite
 
 Automated testing framework for Awara Sleep e-commerce platform built with Playwright and TypeScript, implementing UI and API tests with Allure reporting and CI/CD integration.
 
