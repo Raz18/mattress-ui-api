@@ -5,6 +5,8 @@ Automated testing framework for Awara Sleep e-commerce platform built with Playw
 ## 📋 Table of Contents
 
 - [Technology Stack](#technology-stack)
+- [Implementation Highlights](#implementation-highlights)
+- [Quality Engineering Practices](#quality-engineering-practices)
 - [Project Structure](#project-structure)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
@@ -21,6 +23,21 @@ Automated testing framework for Awara Sleep e-commerce platform built with Playw
 - **CI/CD**: GitHub Actions
 - **Runtime**: Node.js 18+
 
+## 🧠 Implementation Highlights
+
+- **Typed Page Object Model**: `pages/` encapsulates locators and flows, extending a shared `BasePage` so tests stay declarative and resilient to DOM churn.
+- **Custom Playwright Configuration**: `playwright.config.ts` pins a single `Desktop Chrome` project, injects the required `E2EUI-Tests` User-Agent, and enables trace/video capture on retries for post-failure triage.
+- **API Contract Validation**: `tests/api/products.spec.ts` uses Playwright's APIRequestContext with defensive data parsing to handle multiple response envelopes, ensuring brand and product endpoints stay contract-compliant.
+- **Structured Logging**: `utils/logger.ts` wraps console output with ISO timestamps and log levels (INFO/WARN/ERROR/STEP), making both local runs and CI logs easy to scan.
+- **Allure Storytelling**: Test suites annotate steps with `@epic` and `feature` tags, attach responses and screenshots, and emit a single `allure-results/` bundle that teams can consume locally or in CI artifacts.
+
+## ✅ Quality Engineering Practices
+
+- **Deterministic Selectors**: UI flows prefer `data-testid` attributes and ARIA roles, insulating the suite from marketing copy changes while retaining accessibility alignment.
+- **Idempotent Scenarios**: Each test seeds and tears down state via UI/API only, allowing CI runs to be parallel and repeatable without shared state collisions.
+- **Explicit Wait Strategy**: Instead of global sleeps, waits live close to the interaction (`waitForURL`, locator `.waitFor`), reducing flakiness under varied network conditions.
+- **Configuration Isolation**: Environment-specific data (base URL, user-agent) lives in one config file, so onboarding new environments or browsers is a diff-friendly change.
+- **CI Feedback Loop**: Workflow enforces the same commands developers run locally (`npm test`, Allure generation) keeping execution parity between laptops and pipelines.
 ## 📁 Project Structure
 
 ```
@@ -132,10 +149,10 @@ GitHub Actions workflow runs on every push to any branch:
 
 1. Installs dependencies and Playwright browsers
 2. Executes all tests (UI + API)
-3. Generates Allure reports
-4. Uploads artifacts: Playwright HTML report, Allure results, screenshots, traces
+3. Generates Allure results
+4. Uploads artifacts: Allure results bundle, screenshots, traces, console logs
 
-Access reports via the **Actions** tab in your GitHub repository.
+Access reports via the **Actions** tab in your GitHub repository and download the Allure artifacts to view the execution history locally.
 
 ## 🧪 Test Scenarios
 
